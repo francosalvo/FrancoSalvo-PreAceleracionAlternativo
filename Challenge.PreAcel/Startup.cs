@@ -1,7 +1,9 @@
+using Challenge.PreAcel.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,9 +14,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace Challenge.PreAcel
 {
-    public class Startup
+    public class Startup    
     {
         public Startup(IConfiguration configuration)
         {
@@ -28,10 +31,21 @@ namespace Challenge.PreAcel
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c  =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Challenge.PreAcel", Version = "v1" });
             });
+
+            services.AddEntityFrameworkSqlServer();
+            services.AddDbContextPool<GeoIconsContext>(optionsAction: (provider, buldier) =>
+            {
+
+                buldier.UseInternalServiceProvider(provider);
+                buldier.UseSqlServer(connectionString: "Data Source=(localdb)\\MSSQLLocalDB;Database=GeoIconsDb;Integrated Security=True;");
+
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
