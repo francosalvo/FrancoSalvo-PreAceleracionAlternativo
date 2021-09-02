@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
+
 namespace Challenge.PreAcel
 {
     public class Startup    
@@ -37,14 +38,14 @@ namespace Challenge.PreAcel
             });
 
             services.AddEntityFrameworkSqlServer();
-            services.AddDbContextPool<GeoIconsContext>(optionsAction: (provider, buldier) =>
+
+            //AddDbContext AddDbContextPool
+            services.AddDbContextPool<GeoIconsContext>(optionsAction: (services, options) => 
             {
-
-                buldier.UseInternalServiceProvider(provider);
-                buldier.UseSqlServer(connectionString: "Data Source=(localdb)\\MSSQLLocalDB;Database=GeoIconsDb;Integrated Security=True;");
-
+                options.UseInternalServiceProvider(services);
+                string connection = "Data Source=(localdb)\\MSSQLLocalDB;Database=GeoIconsDb;Integrated Security=True;";
+                options.UseSqlServer(connection);
             });
-
 
         }
 
